@@ -1,6 +1,6 @@
 <script setup>
 import { defineProps, ref, defineEmits, onMounted } from 'vue';
-import ShowKeyboard from './ShowKeyboard.vue';
+
 const props = defineProps({
   word: String
 });
@@ -20,14 +20,21 @@ async function handleInput(event, index) {
     }
   }
 }
-function handleKeydown(event) {
+async function handleKeydown(event) {
   if (event.key === "Backspace" && event.target.value === "") {
-      if (event.target.previousElementSibling) {
-        event.target.previousElementSibling.focus();
-      }
+    if (event.target.previousElementSibling) {
+      event.target.previousElementSibling.focus();
+    }
   }
   if (event.key === "Enter") {
-    checkIfWord();
+    console.log(event.target);
+    if (await (checkIfWord())) {
+      checkCorrectLetters();
+      endOfRoundCheck();
+    } else {
+      event.target.focus();
+    }
+    
   }
 }
 async function checkIfWord() {
@@ -40,17 +47,19 @@ async function checkIfWord() {
     if (response.status === 200) {
       console.log(`Check if word passed: `, data.message);
       console.log(`GuessString: `, guessString);
-      // changing functions
-      checkCorrectLetters();
+      return true
+      
 
     } else if (response.status === 404) {
       emit('user-message', "Word not in list");
       console.log(`word not in list: `, data);
       console.log(`Guess: `, guessString);
+      return false
     }
     } else {
       console.log("Length check failed, word not long enough");
       emit('user-message', "Word not long enough");
+      return false
     }
 }
 
@@ -75,8 +84,6 @@ function checkCorrectLetters() {
       }
     }
   }
-  endOfRoundCheck();
- 
 }
 function endOfRoundCheck() {
   guessCount.value += 1;
@@ -89,10 +96,10 @@ function endOfRoundCheck() {
   } else {
     emit('status', "playing");
   }
-  
   guess.value = Array(props.word.length).fill("");
   emit('guessCount', guessCount.value);
 }
+
 </script>
 
 <template>

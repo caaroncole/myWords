@@ -4,6 +4,7 @@ import SelectDifficulty from './components/SelectDifficulty.vue';
 import HeaderComponent from './components/HeaderComponent.vue';
 import GuessWord from './components/GuessWord.vue';
 import ShowFooter from './components/ShowFooter.vue';
+import ShowKeyboard from './components/ShowKeyboard.vue';
 
 
 const guessCount = ref(0);
@@ -35,7 +36,10 @@ const recordStatus = (state) => {
   </header>
   <main>
     <SelectDifficulty v-if="!word" @game-start="gameBegin" />
-    <GuessWord v-if="word" :word="word" @user-message="showMessage" @guessCount="showGuessCount" @status="recordStatus" />
+    <div v-if="word">
+    <GuessWord :word="word" @user-message="showMessage" @guessCount="showGuessCount" @status="recordStatus" />
+    <ShowKeyboard />
+    </div>
   </main>
 
   <footer>

@@ -32,7 +32,7 @@ async function fetchDefinition(word) {
 </script>
 
 <template>
-  <div class="showMessage">
+  <div class="showFooter">
     <div class="userMessage" v-if="props.status === 'playing'">
       <h4>Tries: {{ props.guessCount }} </h4>
       <h5>{{ props.message }}</h5>
