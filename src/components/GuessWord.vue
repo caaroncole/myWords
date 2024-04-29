@@ -12,6 +12,7 @@ onMounted(() => {
   emit('guessCount', guessCount.value);
   console.log(props.word);
 })
+
 async function handleInput(event, index) {
   guess.value[index] = event.target.value;
   if (event.inputType === "insertText") {
@@ -64,26 +65,12 @@ async function checkIfWord() {
 }
 
 function checkCorrectLetters() {
-  for (let i = 0; i < guess.value.length; i++) {
-    if (guess.value[i] === props.word[i]) {
-      correctGuesses.value[i] = guess.value[i];
-      // add classlist to correct letters in input fields
-      const inputField = document.getElementById(`input${guessCount.value}${i}`);
-      if (inputField !== null) {
-        inputField.classList.add("correct");
-      }    
-    } else if (guess.value[i] !== props.word[i] && props.word.includes(guess.value[i])) {
-      const inputField = document.getElementById(`input${guessCount.value}${i}`);
-      if (inputField !== null) {
-        inputField.classList.add("present");
-      }
-    } else if (guess.value[i] !== props.word[i]) {
-      const inputField = document.getElementById(`input${guessCount.value}${i}`);
-      if (inputField !== null) {
-        inputField.classList.add("absent");
-      }
+  for (const [index, letter] of guess.value.entries()) {
+    if (props.word[index] === letter) {
+      correctGuesses.value[index] = letter;
+      
+
     }
-  }
 }
 function endOfRoundCheck() {
   guessCount.value += 1;
@@ -99,6 +86,7 @@ function endOfRoundCheck() {
   guess.value = Array(props.word.length).fill("");
   emit('guessCount', guessCount.value);
 }
+
 
 </script>
 
